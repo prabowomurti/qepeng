@@ -1,0 +1,6 @@
+{
+  "name": "Qepeng",
+  "tagline": "Money tracker a.k.a Toshl clone",
+  "body": "### What is Qepeng\r\nQepeng is an app to track your money. I believe Qepeng should be and always be simple for our daily use. \r\n\r\n### History\r\nThe word \"qepeng\" originally comes from \"kepeng\" which means a coin with a hole in it. Qepeng is a clone of Toshl version 1, which I use to track my money. Unfortunately, Toshl has upgraded the app to version 2 which has more complicated features such as accounts, categories, etc.\r\n\r\n### More\r\nThis side-project is another portfolio of mine while learning Yii2 and iOS development. The mobile app (on iOS) will be available after the backend and website is ready. You can give your contribution by improving the source code. The issue page is always open.",
+  "note": "Don't delete this file! It's used internally to help with page regeneration."
+}
