@@ -3,6 +3,7 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
+use common\models\User;
 use backend\assets\AppAsset;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
@@ -37,9 +38,17 @@ AppAsset::register($this);
     $menuItems = [
         ['label' => 'Home', 'url' => ['/site/index']],
     ];
-    if (Yii::$app->user->isGuest) {
+    if (Yii::$app->user->isGuest) 
+    {
         $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
-    } else {
+    } 
+    elseif (Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN) 
+    {
+        $menuItems[] = [
+            'label' => 'User',
+            'url'   => ['/user/index'],
+        ];
+
         $menuItems[] = '<li>'
             . Html::beginForm(['/site/logout'], 'post')
             . Html::submitButton(
