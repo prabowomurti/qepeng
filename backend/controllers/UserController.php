@@ -30,7 +30,9 @@ class UserController extends Controller
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action)
                         {
-                            return Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN;
+                            return 
+                                Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN ||
+                                Yii::$app->user->identity['role'] == User::ROLE_ADMIN;
                         }
                     ],
                 ],
@@ -93,8 +95,6 @@ class UserController extends Controller
             $model->setPassword($model->password);
             $model->generateAuthKey();
 
-            $post_user = Yii::$app->request->post('User');
-
             if ($model->save())
                 return $this->redirect(['view', 'id' => $model->id]);
             else 
@@ -121,13 +121,36 @@ class UserController extends Controller
     {
         $model = $this->findModel($id);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('update', [
-                'model' => $model,
-            ]);
+        if (Yii::$app->request->post())
+        {
+            $post_user = Yii::$app->request->post('User');
+
+            $model->username  = $post_user['username'];
+            $model->email     = $post_user['email'];
+            $model->role      = $post_user['role'];
+            $model->status    = $post_user['status'];
+
+            // update password
+            if ( ! empty($post_user['password']))
+            {
+                if (strlen($model->password) < 6)
+                {
+                    $model->addError('password', 'Password should contain at least 6 characters.');
+                    return $this->render('update', [
+                        'model' => $model,
+                    ]);
+                }
+
+                $model->setPassword($post_user['password']);
+            }
+
+            if ($model->save())
+                return $this->redirect(['view', 'id' => $model->id]);
+            else 
+                return $this->render('update', ['model' => $model,]);
         }
+        else 
+            return $this->render('update', ['model' => $model]);
     }
 
     /**
@@ -147,7 +170,17 @@ class UserController extends Controller
 
             // update password
             if ( ! empty($post_user['password']))
+            {
+                if (strlen($model->password) < 6)
+                {
+                    $model->addError('password', 'Password should contain at least 6 characters.');
+                    return $this->render('update', [
+                        'model' => $model,
+                    ]);
+                }
+
                 $model->setPassword($post_user['password']);
+            }
 
             if ($model->save())
                 return $this->redirect(['profile', 'success' => true]);

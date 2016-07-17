@@ -45,6 +45,11 @@ AppAsset::register($this);
     elseif (Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN) 
     {
         $menuItems[] = [
+            'label' => 'Profile',
+            'url'   => ['/user/profile'],
+        ];
+
+        $menuItems[] = [
             'label' => 'User',
             'url'   => ['/user/index'],
         ];
