@@ -65,6 +65,7 @@ class User extends ActiveRecord implements IdentityInterface
             [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
             [['auth_key'], 'string', 'max' => 32],
             [['role'], 'string', 'max' => 50],
+            [['role'], 'default', 'value' => self::ROLE_USER],
             [['email'], 'unique'],
             [['password_reset_token'], 'unique'],
             ['password', 'string', 'min' => 6]
@@ -78,7 +79,7 @@ class User extends ActiveRecord implements IdentityInterface
     {
         return [
             'id'                   => Yii::t('app', 'ID'),
-            'username'             => Yii::t('app', 'Username'),
+            'username'             => Yii::t('app', 'User Name'),
             'auth_key'             => Yii::t('app', 'Auth Key'),
             'password_hash'        => Yii::t('app', 'Password Hash'),
             'password_reset_token' => Yii::t('app', 'Password Reset Token'),

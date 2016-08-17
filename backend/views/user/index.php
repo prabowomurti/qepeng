@@ -25,7 +25,10 @@ $this->params['breadcrumbs'][] = $this->title;
         'filterModel' => $searchModel,
         'columns' => [
             ['class' => 'yii\grid\CheckboxColumn'],
-            'id',
+            [
+                'attribute' => 'id',
+                'options'   => ['width' => '70px']
+            ],
             'username',
             // 'auth_key',
             // 'password_hash',
