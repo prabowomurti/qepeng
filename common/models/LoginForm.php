@@ -63,6 +63,28 @@ class LoginForm extends Model
     }
 
     /**
+     * Logs in a backend user using the provided email and password.
+     * 
+     * @return boolean whether the user is logged in successfully
+     */
+    public function backendLogin()
+    {
+        if ($this->validate()) {
+            $user = $this->getUser();
+            if ($user->role == User::ROLE_USER)
+            {
+                $this->_user = false;
+                $this->addError('email', 'Can not login as ' . User::ROLE_USER);
+                return false;
+            }
+
+            return Yii::$app->user->login($user, $this->rememberMe ? 3600 * 24 * 30 : 0);
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Finds user by [[email]]
      *
      * @return User|null
