@@ -27,7 +27,10 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_ACTIVE = 10;
 
     const ROLE_SUPERADMIN = 'superadmin';
-    const ROLE_ADMIN = 'admin';
+    const ROLE_ADMIN      = 'admin';
+    const ROLE_USER       = 'user';
+
+    public $password;
 
     /**
      * @inheritdoc
@@ -53,8 +56,38 @@ class User extends ActiveRecord implements IdentityInterface
     public function rules()
     {
         return [
+            [['username', 'email', 'auth_key', 'password_hash'], 'required'],
+            ['username', 'string', 'min' => 4],
+            ['email', 'email'],
+            [['status', 'created_at', 'updated_at'], 'integer'],
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
+            [['username', 'password_hash', 'password_reset_token', 'email'], 'string', 'max' => 255],
+            [['auth_key'], 'string', 'max' => 32],
+            [['role'], 'string', 'max' => 50],
+            [['role'], 'default', 'value' => self::ROLE_USER],
+            [['email'], 'unique'],
+            [['password_reset_token'], 'unique'],
+            ['password', 'string', 'min' => 6]
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function attributeLabels()
+    {
+        return [
+            'id'                   => Yii::t('app', 'ID'),
+            'username'             => Yii::t('app', 'User Name'),
+            'auth_key'             => Yii::t('app', 'Auth Key'),
+            'password_hash'        => Yii::t('app', 'Password Hash'),
+            'password_reset_token' => Yii::t('app', 'Password Reset Token'),
+            'email'                => Yii::t('app', 'Email'),
+            'role'                 => Yii::t('app', 'Role'),
+            'status'               => Yii::t('app', 'Status'),
+            'created_at'           => Yii::t('app', 'Created At'),
+            'updated_at'           => Yii::t('app', 'Updated At'),
         ];
     }
 
@@ -198,5 +231,27 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * Get `role` field as array
+     * @return array array of roles
+     */
+    public static function getRoleAsArray()
+    {
+        return [
+            static::ROLE_SUPERADMIN => 'Super Admin',
+            static::ROLE_ADMIN      => 'Admin',
+            static::ROLE_USER       => 'User',
+            ];
+    }
+
+    /**
+     * Get `status` field as array
+     * @return array array of status
+     */
+    public static function getStatusAsArray()
+    {
+        return [static::STATUS_ACTIVE => 'Active', static::STATUS_DELETED => 'Deleted'];
     }
 }
