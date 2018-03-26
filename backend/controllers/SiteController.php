@@ -32,7 +32,7 @@ class SiteController extends Controller
                         'roles' => ['@'],
                         'matchCallback' => function ($rule, $action)
                         {
-                            return Yii::$app->user->identity['role'] == User::ROLE_ADMIN;
+                            return Yii::$app->user->identity['role'] == User::ROLE_SUPERADMIN;
                         }
                     ],
                 ],
